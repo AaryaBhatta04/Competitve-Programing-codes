@@ -1,67 +1,72 @@
-//Disjoint set union code..
+//dsu code
+
 class DSU
 {
 public:
-    vector<int> rors, par;
+    vector<int> rors, pars;
+
     DSU(int n)
     {
         rors.resize(n + 1, 1);
-        par.resize(n + 1);
+        pars.resize(n + 1);
         for (int i = 0; i <= n; i++)
         {
-            par[i] = i;
+            pars[i] = i;
         }
     }
+
     int upar(int node)
     {
-        if (node == par[node])
+        if (pars[node] == node)
         {
             return node;
         }
-        return par[node] = upar(par[node]);
-        // return upar(par[node]);
-    }
-
-    void unionbrank(int nodea, int nodeb)
-    {
-        int upa = upar(nodea);
-        int upb = upar(nodeb);
-        if (upa == upb)
-        {
-            return;
-        }
-        if (rors[upa] > rors[upb])
-        {
-            par[upb] = upa;
-        }
-        else if (rors[upb] > rors[upa])
-        {
-            par[upa] = upb;
-        }
         else
         {
-            par[upa] = upb;
-            rors[upb]++;
+            return pars[node] = upar(pars[node]);
         }
     }
 
-    void unionbsize(int nodea, int nodeb)
+    void ubr(int a, int b)
     {
-        int upa = upar(nodea);
-        int upb = upar(nodeb);
-        if (upa == upb)
+        int pa = upar(a);
+        int pb = upar(b);
+        if (pa == pb)
         {
             return;
         }
-        if (rors[upa] > rors[upb])
+        if (rors[pa] > rors[pb])
         {
-            par[upb] = upa;
-            rors[upa] += rors[upb];
+            pars[pb] = pa;
+        }
+        else if (rors[pa] < rors[pb])
+        {
+            pars[pa] = pb;
         }
         else
         {
-            par[upa] = upb;
-            rors[upb] += rors[upa];
+            pars[pa] = pb;
+            rors[pb]++;
+        }
+    }
+
+    void ubs(int a, int b)
+    {
+        int pa = upar(a);
+        int pb = upar(b);
+        if (pa == pb)
+        {
+            return;
+        }
+        if (rors[pa] > rors[pb])
+        {
+            pars[pb] = pa;
+            rors[pa] += rors[pb];
+        }
+        else
+        {
+            pars[pa] = pb;
+            rors[pb] += rors[pa];
         }
     }
 };
