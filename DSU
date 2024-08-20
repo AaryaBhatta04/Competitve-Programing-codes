@@ -1,0 +1,67 @@
+//Disjoint set union code..
+class DSU
+{
+public:
+    vector<int> rors, par;
+    DSU(int n)
+    {
+        rors.resize(n + 1, 1);
+        par.resize(n + 1);
+        for (int i = 0; i <= n; i++)
+        {
+            par[i] = i;
+        }
+    }
+    int upar(int node)
+    {
+        if (node == par[node])
+        {
+            return node;
+        }
+        return par[node] = upar(par[node]);
+        // return upar(par[node]);
+    }
+
+    void unionbrank(int nodea, int nodeb)
+    {
+        int upa = upar(nodea);
+        int upb = upar(nodeb);
+        if (upa == upb)
+        {
+            return;
+        }
+        if (rors[upa] > rors[upb])
+        {
+            par[upb] = upa;
+        }
+        else if (rors[upb] > rors[upa])
+        {
+            par[upa] = upb;
+        }
+        else
+        {
+            par[upa] = upb;
+            rors[upb]++;
+        }
+    }
+
+    void unionbsize(int nodea, int nodeb)
+    {
+        int upa = upar(nodea);
+        int upb = upar(nodeb);
+        if (upa == upb)
+        {
+            return;
+        }
+        if (rors[upa] > rors[upb])
+        {
+            par[upb] = upa;
+            rors[upa] += rors[upb];
+        }
+        else
+        {
+            par[upa] = upb;
+            rors[upb] += rors[upa];
+        }
+    }
+};
