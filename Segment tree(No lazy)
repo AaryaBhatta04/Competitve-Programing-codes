@@ -1,5 +1,6 @@
 //Normal segment tree without lazy propagation..
 
+
 struct node
 {
     // node e ki ki thakbe bhabho bhalo kore!!
