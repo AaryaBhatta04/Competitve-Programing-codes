@@ -20,7 +20,6 @@ node merge(node a, node b)
     return ans;
 }
 
-int n;
 vector<node> t;
 
 void build(int id, int l, int r)
