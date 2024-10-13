@@ -1,0 +1,12 @@
+int mod_exp(int base, int exp)
+{
+    int result = 1;
+    while (exp > 0)
+    {
+        if (exp % 2 == 1) // If exp is odd, multiply base with result
+            result = (result * base) % mod;
+        base = (base * base) % mod; // Square the base
+        exp /= 2;                   // Divide the exponent by 2
+    }
+    return result;
+}
