@@ -1,0 +1,13 @@
+int compute_hash(string &s)
+{
+    const int p = 31;
+    const int m = 1e9 + 9;
+    int val = 0;
+    int pow = 1;
+    for (auto it : s)
+    {
+        (val = val + (it - 'a' + 1) * pow) % m;
+        (pow = pow * p) % m;
+    }
+    return val;
+}
