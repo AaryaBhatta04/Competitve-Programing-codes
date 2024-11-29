@@ -1,0 +1,45 @@
+vector<int> pre, inv;
+
+int modinv(int x, int mod)
+{
+    int res = 1, e = mod - 2;
+    while (e)
+    {
+        if (e & 1)
+            res = (res * x) % mod;
+        x = (x * x) % mod;
+        e >>= 1;
+    }
+    return res;
+}
+
+void init(string &s)
+{
+    const int p = 31;
+    const int m = 1e9 + 9;
+    int pow = 1;
+    pre.assign(s.length(), 0);
+    inv.assign(s.length(), 0);
+    inv[0] = 1;
+    pre[0] = s[0] - 'a' + 1;
+
+    for (int i = 1; i < s.length(); i++)
+    {
+        pow = (pow * p) % m;
+        inv[i] = modinv(pow, m);
+
+        pre[i] = (pre[i - 1] + ((s[i] - 'a' + 1) * pow) % m) % m;
+    }
+}
+
+int substring_hash(int l, int r)
+{
+    const int m = 1e9 + 9;
+    int res = pre[r];
+
+    if (l > 0)
+        res = (res - pre[l - 1] + m) % m;
+
+    res = (res * inv[l]) % m;
+    return res;
+}
