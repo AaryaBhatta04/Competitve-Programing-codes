@@ -1,81 +1,66 @@
-//Normal segment tree without lazy propagation..
-
-
-struct node
+struct Node
 {
-    // node e ki ki thakbe bhabho bhalo kore!!
     int sum;
-    node()
+    Node()
     {
-        sum = 0;
+        sum = inf;
     }
 };
 
-node merge(node a, node b)
+class SegmentTree
 {
-    // nodes er merge korar logic ki?
-    //  kokhono xor koro kokhono min-max to kokhono sum and so on..
-    node ans;
-    ans.sum = a.sum + b.sum;
-    return ans;
-}
+public:
+    vector<Node> t;
+    int n;
 
-vector<node> t;
-
-void build(int id, int l, int r)
-{
-    if (l == r)
+    Node merge(Node a, Node b)
     {
-        // Eita kintu leaf node
-        // initializing logic set korte hobe eikhane
-        t[id].sum = 0;
-        return;
-    }
-    // tarpor to shudu O(logn) e shob update hobe..
-    int mid = (l + r) >> 1;
-    build(2 * id, l, mid);
-    build(2 * id + 1, mid + 1, r);
-    t[id] = merge(t[2 * id], t[2 * id + 1]);
-}
-
-void update(int id, int l, int r, int pos, int val)
-{
-    if (pos < l || pos > r)
-    {
-        // eikhane kono overlap hobe na
-        // kichu korte hobe na
-        return;
+        Node ans;
+        ans.sum = min(a.sum, b.sum);
+        return ans;
     }
 
-    if (l == r)
+    void build(int id, int l, int r, const vector<int> &arr)
     {
-        // mane amra pos index e pohuche gachi eibaar shudu update koro ar tarpor return!!
-        t[id].sum = val;
-        return;
+        if (l == r)
+        {
+            t[id].sum = arr[l];
+            return;
+        }
+        int mid = (l + r) >> 1;
+        build(2 * id, l, mid, arr);
+        build(2 * id + 1, mid + 1, r, arr);
+        t[id] = merge(t[2 * id], t[2 * id + 1]);
     }
 
-    // tarpor to as usual (Ologn) e update koro..
-    int mid = (l + r) >> 1;
-    update(2 * id, l, mid, pos, val);
-    update(2 * id + 1, mid + 1, r, pos, val);
-    t[id] = merge(t[2 * id], t[2 * id + 1]);
-}
-
-node query(int id, int l, int r, int lo, int hi)
-{
-    if (lo > r || l > hi)
+    void update(int id, int l, int r, int pos, int val)
     {
-        // thik ager moton eikhane o kono overlap nei, to kichu korte hobe na
-        return node(); // eita kintu shob shomaye thik na, just sum er case e thik
-        // ei case e ki return hobe sheita bhabte hobe..
+        if (pos < l || pos > r)
+        {
+            return;
+        }
+        if (l == r)
+        {
+            t[id].sum = val;
+            return;
+        }
+        int mid = (l + r) >> 1;
+        update(2 * id, l, mid, pos, val);
+        update(2 * id + 1, mid + 1, r, pos, val);
+        t[id] = merge(t[2 * id], t[2 * id + 1]);
     }
 
-    if (lo <= l && hi >= r)
+    Node query(int id, int l, int r, int lo, int hi)
     {
-        // again ager moton eikhane puro overlao hoche, so just return the entire node
-        return t[id];
+        if (lo > r || l > hi)
+        {
+            return Node();
+        }
+        if (lo <= l && hi >= r)
+        {
+            return t[id];
+        }
+        int mid = (l + r) >> 1;
+        return merge(query(2 * id, l, mid, lo, hi), query(2 * id + 1, mid + 1, r, lo, hi));
     }
-
-    int mid = (l + r) >> 1;
-    return merge(query(2 * id, l, mid, lo, hi), query(2 * id + 1, mid + 1, r, lo, hi));
-}
+};
