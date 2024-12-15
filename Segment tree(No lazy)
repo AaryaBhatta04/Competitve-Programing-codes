@@ -3,7 +3,7 @@ struct Node
     int sum;
     Node()
     {
-        sum = inf;
+        sum = 0;
     }
 };
 
@@ -16,7 +16,7 @@ public:
     Node merge(Node a, Node b)
     {
         Node ans;
-        ans.sum = min(a.sum, b.sum);
+        ans.sum = a.sum+b.sum;
         return ans;
     }
 
