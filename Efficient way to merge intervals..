@@ -1,0 +1,21 @@
+bool cmp(const pair<int, int> &a, const pair<int, int> &b)
+{
+    if (a.first != b.first)
+    {
+        return a.first < b.first;
+    }
+    return a.second > b.second;
+}
+
+sort(stor1.begin(), stor1.end(), cmp);
+
+        stor.clear();
+        int chk = -1;
+        for (auto it : stor1)
+        {
+            if (it.second > chk)
+            {
+                stor.push_back({max(chk + 1, it.first), it.second});
+                chk = it.second;
+            }
+        }
