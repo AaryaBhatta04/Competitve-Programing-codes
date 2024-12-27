@@ -1,0 +1,130 @@
+// Submission for cf round 906 div 1 (c) easy version. Usefull technique to keep track of overlaps among given set of ranges..
+
+/*
+    AUTHOR -> aaryamanbhattacharya04 (CODEFORCES)
+*/
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace std;
+using namespace __gnu_pbds;
+#define int long long
+typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_multiset;
+const int mod = 1e9 + 7;
+const int inf = 1e18;
+const int K = 26;
+/*
+ __builtin_popcountll(x): Counts the number of one’s(set bits) in an integer(long/long long).
+ __builtin_parityll(x): Checks the Parity of a number.Returns true(1) if the number has odd parity(odd number of set bits) else it returns false(0) for even parity(even number of set bits).
+ __builtin_clzll(x): Counts the leading number of zeros of the integer(long/long long).
+ __builtin_ctzll(x): Counts the trailing number of zeros of the integer(long/long long).
+cout << fixed << setprecision(x) << ans << "\n"; : Use this in case ans is required upto x deciaml precision
+*/
+int n, m, k;
+vector<pair<int, int>> a, b;
+vector<vector<int>> adj;
+vector<int> cov, p, chk;
+set<int> s;
+void solve()
+{
+    cin >> n >> m >> k;
+    a.assign(m + 1, pair<int, int>());
+    adj.assign(n + 2, vector<int>());
+
+    for (int i = 1; i <= m; i++)
+    {
+        int l, r;
+        cin >> l >> r;
+        a[i] = {l, r};
+        adj[l].push_back(i);
+        adj[r + 1].push_back(-1LL * i);
+    }
+
+    cov.assign(n + 2, 0);
+    p.assign(n + 2, 0);
+    s.clear();
+    b.assign(n + 2, pair<int, int>());
+    int ans = 0LL;
+
+    for (int i = 1; i <= n; i++)
+    {
+        for (auto it : adj[i])
+        {
+            if (it > 0LL)
+            {
+                s.insert(it);
+            }
+            else
+            {
+                s.erase(-1LL * it);
+            }
+        }
+
+        cov[i] = s.size();
+        if (cov[i] == 0)
+        {
+            ans++;
+        }
+        else if (cov[i] == 1)
+        {
+            p[i]++;
+        }
+        else if (cov[i] == 2)
+        {
+            b[i] = {*s.begin(), *s.rbegin()};
+        }
+
+        p[i] += p[i - 1];
+    }
+
+    int mx1 = 0, mx2 = 0;
+    chk.assign(m + 1, 0);
+
+    for (int i = 1; i <= m; i++)
+    {
+        chk[i] = p[a[i].second] - p[a[i].first - 1];
+
+        if (chk[i] > mx1)
+        {
+            mx2 = mx1;
+            mx1 = chk[i];
+        }
+        else if (chk[i] > mx2)
+        {
+            mx2 = chk[i];
+        }
+    }
+
+    int res = mx1 + mx2;
+
+    map<pair<int, int>, int> mp;
+
+    for (int i = 1; i <= n; i++)
+    {
+        if (cov[i] == 2)
+        {
+            mp[b[i]]++;
+        }
+    }
+
+    for (auto it : mp)
+    {
+        res = max(res, it.second + chk[it.first.first] + chk[it.first.second]);
+    }
+
+    cout << ans + res << "\n";
+    return;
+}
+signed main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    int _ = 1;
+    cin >> _;
+    for (int __ = 1; __ <= _; __++)
+    {
+        solve();
+    }
+}
