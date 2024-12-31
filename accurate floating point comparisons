@@ -1,0 +1,6 @@
+// Function to calculate rounded values for precision comparison
+ld roundToPrecision(ld value, int precision)
+{
+    ld scale = pow(10.0, precision); // Scale factor for rounding
+    return round(value * scale) / scale;
+}
