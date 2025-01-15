@@ -1,0 +1,10 @@
+pair<int, int> ext_gcd(int a, int b)
+{
+    if (b == 0)
+    {
+        return {1, 0};
+    }
+    pair<int, int> p = ext_gcd(b, a % b);
+
+    return {p.second, p.first - (a / b) * p.second};
+}
