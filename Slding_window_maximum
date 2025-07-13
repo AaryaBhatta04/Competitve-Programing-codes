@@ -1,0 +1,27 @@
+vector<int> sliding_window_max(vector<int> &a, int x)
+{
+    int n = a.size();
+    vector<int> res;
+    deque<int> dq;
+
+    for (int i = 0; i < n; i++)
+    {
+        while (!dq.empty() && dq.front() <= i - x)
+        {
+            dq.pop_front();
+        }
+
+        while (!dq.empty() && a[i] > a[dq.back()])
+        {
+            dq.pop_back();
+        }
+        dq.push_back(i);
+
+        if (i >= x - 1)
+        {
+            res.push_back(a[dq.front()]);
+        }
+    }
+
+    return res;
+}
